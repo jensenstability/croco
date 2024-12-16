@@ -4,22 +4,32 @@
 """
 Script generating commandlines to generate image pairs from metadata files.
 """
-import os
-import glob
-from tqdm import tqdm
 import argparse
+import glob
+import os
+
+from tqdm import tqdm
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_dir", required=True)
     parser.add_argument("--output_dir", required=True)
-    parser.add_argument("--prefix", default="", help="Commanline prefix, useful e.g. to setup environment.")
+    parser.add_argument(
+        "--prefix",
+        default="",
+        help="Commanline prefix, useful e.g. to setup environment.",
+    )
     args = parser.parse_args()
 
-    input_metadata_filenames = glob.iglob(f"{args.input_dir}/**/metadata.json", recursive=True)
+    input_metadata_filenames = glob.iglob(
+        f"{args.input_dir}/**/metadata.json", recursive=True
+    )
 
     for metadata_filename in tqdm(input_metadata_filenames):
-        output_dir = os.path.join(args.output_dir, os.path.relpath(os.path.dirname(metadata_filename), args.input_dir))
+        output_dir = os.path.join(
+            args.output_dir,
+            os.path.relpath(os.path.dirname(metadata_filename), args.input_dir),
+        )
         # Do not process the scene if the metadata file already exists
         if os.path.exists(os.path.join(output_dir, "metadata.json")):
             continue
